@@ -2,7 +2,7 @@ import { getScriptDownloadPath, getVisitorIdPath, getHealthCheckPath, WorkerEnv 
 
 import { createErrorResponse } from './utils'
 import { handleDownloadScript, handleIngressAPI, handleHealthCheck } from './handlers'
-/////////// 1 comment
+//////////// 1 comment
 export async function handleRequest(request: Request, env: WorkerEnv): Promise<Response> {
   const url = new URL(request.url)
   const pathname = url.pathname
