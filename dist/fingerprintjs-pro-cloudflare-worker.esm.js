@@ -1,5 +1,5 @@
 /**
- * FingerprintJS Pro Agent Cloudflare Worker v0.0.6 - Copyright (c) FingerprintJS, Inc, 2022 (https://fingerprintjs.com)
+ * FingerprintJS Pro Agent Cloudflare Worker v0.0.7 - Copyright (c) FingerprintJS, Inc, 2022 (https://fingerprintjs.com)
  * Licensed under the MIT (http://www.opensource.org/licenses/mit-license.php) license.
  */
 
@@ -9593,7 +9593,7 @@ function handleHealthCheck(env) {
     });
 }
 
-/////////////// 1 comment
+///////////////// 1 comment
 async function handleRequest(request, env) {
     const url = new URL(request.url);
     const pathname = url.pathname;
