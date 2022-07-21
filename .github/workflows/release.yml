@@ -1,0 +1,81 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_bump:
+        description: 'A type of version bump'
+        default: 'major'
+        required: true
+        type: choice
+        options:
+        - major
+        - minor
+        - patch
+
+jobs:
+  release:
+    name: Release new version
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    if: github.ref == 'refs/heads/develop'
+
+    steps:
+      - name: Checkout develop branch
+        uses: actions/checkout@v2
+        with:
+          ref: develop
+
+      # git config settings to have user name and email for commit messages
+      - name: Set git settings
+        uses: fregante/setup-git-user@v1          
+
+      # Build and test
+      - name: Install Node packages
+        run: yarn install
+      - name: Lint
+        run: yarn lint
+      - name: Tests
+        run: yarn test
+      
+      - name: Bump version
+        run: yarn version --${{ github.event.inputs.version_bump }}  
+      - name: Build
+        run: yarn build
+      - name: Typecheck
+        run: yarn test:dts
+
+      # add end-user script that's built in dist/
+      - name: add release scripts
+        run: git add -f dist/
+      - name: commit new version of script
+        run: git commit dist/ -m "Add script"
+
+      - name: get version
+        id: version
+        uses: notiz-dev/github-action-json-property@release
+        with: 
+          path: 'package.json'
+          prop_path: 'version'
+
+      - name: Push tag
+        id: tag_version
+        uses: mathieudutour/github-tag-action@v6.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          custom_tag: ${{steps.version.outputs.prop}}
+      - name: Create a GitHub release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ steps.tag_version.outputs.new_tag }}
+          name: Release ${{ steps.tag_version.outputs.new_tag }}
+          body: ${{ steps.tag_version.outputs.changelog }}
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: develop
