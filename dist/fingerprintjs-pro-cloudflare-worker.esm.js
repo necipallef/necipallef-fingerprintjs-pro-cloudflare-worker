@@ -1,12 +1,12 @@
 /**
- * FingerprintJS Pro Agent Cloudflare Worker v0.0.9 - Copyright (c) FingerprintJS, Inc, 2022 (https://fingerprintjs.com)
+ * FingerprintJS Pro Agent Cloudflare Worker v0.1.0 - Copyright (c) FingerprintJS, Inc, 2022 (https://fingerprintjs.com)
  * Licensed under the MIT (http://www.opensource.org/licenses/mit-license.php) license.
  */
 
 const Defaults = {
     WORKER_PATH: 'cf-worker',
     AGENT_SCRIPT_DOWNLOAD_PATH: 'agent',
-    VISITOR_ID_PATH: 'visitorId',
+    GET_RESULT_PATH: 'getResult',
     REGION: 'us',
     AGENT_VERSION: '3',
 };
@@ -21,24 +21,24 @@ function isVarSet(variable) {
     };
 }
 const workerPathVarName = 'WORKER_PATH';
-const getWorkerPath = getVarOrDefault(workerPathVarName, Defaults);
+const getWorkerPathVar = getVarOrDefault(workerPathVarName, Defaults);
 const isWorkerPathSet = isVarSet(workerPathVarName);
 const agentScriptDownloadPathVarName = 'AGENT_SCRIPT_DOWNLOAD_PATH';
-const getAgentPath = getVarOrDefault(agentScriptDownloadPathVarName, Defaults);
+const getAgentPathVar = getVarOrDefault(agentScriptDownloadPathVarName, Defaults);
 const isScriptDownloadPathSet = isVarSet(agentScriptDownloadPathVarName);
 function getScriptDownloadPath(env) {
-    const agentPath = getAgentPath(env);
-    return `/${getWorkerPath(env)}/${agentPath}`;
+    const agentPathVar = getAgentPathVar(env);
+    return `/${getWorkerPathVar(env)}/${agentPathVar}`;
 }
-const visitorIdPathVarName = 'VISITOR_ID_PATH';
-const getVisitorPath = getVarOrDefault(visitorIdPathVarName, Defaults);
-const isVisitorIdPathSet = isVarSet(visitorIdPathVarName);
-function getVisitorIdPath(env) {
-    const visitorPath = getVisitorPath(env);
-    return `/${getWorkerPath(env)}/${visitorPath}`;
+const getResultPathVarName = 'GET_RESULT_PATH';
+const getGetResultPathVar = getVarOrDefault(getResultPathVarName, Defaults);
+const isGetResultPathSet = isVarSet(getResultPathVarName);
+function getGetResultPath(env) {
+    const getResultPathVar = getGetResultPathVar(env);
+    return `/${getWorkerPathVar(env)}/${getResultPathVar}`;
 }
 function getHealthCheckPath(env) {
-    return `/${getWorkerPath(env)}/health`;
+    return `/${getWorkerPathVar(env)}/health`;
 }
 function getAgentScriptEndpoint(searchParams) {
     const apiKey = searchParams.get('apiKey') || Defaults.API_KEY;
@@ -7402,6 +7402,9 @@ var domainSuffixList = [
 	"hlx.page",
 	"hlx3.page",
 	"beep.pl",
+	"airkitapps.com",
+	"airkitapps-au.com",
+	"airkitapps.eu",
 	"aivencloud.com",
 	"barsy.ca",
 	"*.compute.estate",
@@ -8042,6 +8045,8 @@ var domainSuffixList = [
 	"en-root.fr",
 	"mytuleap.com",
 	"tuleap-partners.com",
+	"encr.app",
+	"encoreapi.com",
 	"onred.one",
 	"staging.onred.one",
 	"eu.encoway.cloud",
@@ -8264,6 +8269,7 @@ var domainSuffixList = [
 	"independent-review.uk",
 	"public-inquiry.uk",
 	"royal-commission.uk",
+	"campaign.gov.uk",
 	"service.gov.uk",
 	"api.gov.uk",
 	"gehirn.ne.jp",
@@ -8341,6 +8347,7 @@ var domainSuffixList = [
 	"kilo.jp",
 	"kuron.jp",
 	"littlestar.jp",
+	"lolipopmc.jp",
 	"lolitapunk.jp",
 	"lomo.jp",
 	"lovepop.jp",
@@ -8489,6 +8496,7 @@ var domainSuffixList = [
 	"blogspot.ug",
 	"blogspot.vn",
 	"goupile.fr",
+	"gov.nl",
 	"awsmppl.com",
 	"günstigbestellen.de",
 	"günstigliefern.de",
@@ -8524,12 +8532,13 @@ var domainSuffixList = [
 	"ngo.ng",
 	"edu.scot",
 	"sch.so",
-	"org.yt",
 	"hostyhosting.io",
 	"häkkinen.fi",
 	"*.moonscale.io",
 	"moonscale.net",
 	"iki.fi",
+	"ibxos.it",
+	"iliadboxos.it",
 	"impertrixcdn.com",
 	"impertrix.com",
 	"smushcdn.com",
@@ -8581,7 +8590,9 @@ var domainSuffixList = [
 	"na4u.ru",
 	"iopsys.se",
 	"ipifony.net",
+	"iservschule.de",
 	"mein-iserv.de",
+	"schulplattform.de",
 	"schulserver.de",
 	"test-iserv.de",
 	"iserv.dev",
@@ -8716,6 +8727,7 @@ var domainSuffixList = [
 	"*.linodeobjects.com",
 	"ip.linodeusercontent.com",
 	"we.bs",
+	"*.user.localcert.dev",
 	"localzone.xyz",
 	"loginline.app",
 	"loginline.dev",
@@ -8773,6 +8785,7 @@ var domainSuffixList = [
 	"hra.health",
 	"miniserver.com",
 	"memset.net",
+	"messerli.app",
 	"*.cloud.metacentrum.cz",
 	"custom.metacentrum.cz",
 	"flt.cloud.muni.cz",
@@ -8785,6 +8798,7 @@ var domainSuffixList = [
 	"azure-mobile.net",
 	"cloudapp.net",
 	"azurestaticapps.net",
+	"1.azurestaticapps.net",
 	"centralus.azurestaticapps.net",
 	"eastasia.azurestaticapps.net",
 	"eastus2.azurestaticapps.net",
@@ -9078,9 +9092,37 @@ var domainSuffixList = [
 	"сочи.рус",
 	"спб.рус",
 	"я.рус",
+	"*.builder.code.com",
+	"*.dev-builder.code.com",
+	"*.stg-builder.code.com",
 	"sandcats.io",
 	"logoip.de",
 	"logoip.com",
+	"fr-par-1.baremetal.scw.cloud",
+	"fr-par-2.baremetal.scw.cloud",
+	"nl-ams-1.baremetal.scw.cloud",
+	"fnc.fr-par.scw.cloud",
+	"functions.fnc.fr-par.scw.cloud",
+	"k8s.fr-par.scw.cloud",
+	"nodes.k8s.fr-par.scw.cloud",
+	"s3.fr-par.scw.cloud",
+	"s3-website.fr-par.scw.cloud",
+	"whm.fr-par.scw.cloud",
+	"priv.instances.scw.cloud",
+	"pub.instances.scw.cloud",
+	"k8s.scw.cloud",
+	"k8s.nl-ams.scw.cloud",
+	"nodes.k8s.nl-ams.scw.cloud",
+	"s3.nl-ams.scw.cloud",
+	"s3-website.nl-ams.scw.cloud",
+	"whm.nl-ams.scw.cloud",
+	"k8s.pl-waw.scw.cloud",
+	"nodes.k8s.pl-waw.scw.cloud",
+	"s3.pl-waw.scw.cloud",
+	"s3-website.pl-waw.scw.cloud",
+	"scalebook.scw.cloud",
+	"smartlabeling.scw.cloud",
+	"dedibox.fr",
 	"schokokeks.net",
 	"gov.scot",
 	"service.gov.scot",
@@ -9172,19 +9214,20 @@ var domainSuffixList = [
 	"*.s5y.io",
 	"*.sensiosite.cloud",
 	"syncloud.it",
-	"diskstation.me",
 	"dscloud.biz",
-	"dscloud.me",
-	"dscloud.mobi",
+	"direct.quickconnect.cn",
 	"dsmynas.com",
-	"dsmynas.net",
-	"dsmynas.org",
 	"familyds.com",
-	"familyds.net",
-	"familyds.org",
+	"diskstation.me",
+	"dscloud.me",
 	"i234.me",
 	"myds.me",
 	"synology.me",
+	"dscloud.mobi",
+	"dsmynas.net",
+	"familyds.net",
+	"dsmynas.org",
+	"familyds.org",
 	"vpnplus.to",
 	"direct.quickconnect.to",
 	"tabitorder.co.il",
@@ -9268,6 +9311,11 @@ var domainSuffixList = [
 	"hk.org",
 	"ltd.hk",
 	"inc.hk",
+	"name.pm",
+	"sch.tf",
+	"biz.wf",
+	"sch.wf",
+	"org.yt",
 	"virtualuser.de",
 	"virtual-user.de",
 	"upli.io",
@@ -9440,39 +9488,66 @@ function createCookieObjectFromHeaderValue(cookieValue) {
     return [cookieName, cookieObject];
 }
 
-function createErrorResponse(error) {
-    let reason;
+function errorToString(error) {
     try {
-        reason = typeof error === 'string' ? error : error instanceof Error ? error.message : String(error);
+        return typeof error === 'string' ? error : error instanceof Error ? error.message : String(error);
     }
     catch (e) {
-        reason = 'unknown';
+        return 'unknown';
     }
-    const responseBody = {
-        message: 'An error occurred with Cloudflare worker.',
-        reason,
+}
+function generateRandomString(length) {
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    for (let i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return result;
+}
+function generateRequestUniqueId() {
+    return generateRandomString(2);
+}
+function generateRequestId() {
+    const uniqueId = generateRequestUniqueId();
+    const now = new Date().getTime();
+    return `${now}.cfi-${uniqueId}`;
+}
+function createErrorResponse(error) {
+    const reason = errorToString(error);
+    const errorBody = {
+        code: 'Failed',
+        message: `An error occurred with Cloudflare worker. Reason: ${reason}`,
     };
-    return new Response(JSON.stringify(responseBody), { status: 500 }); // todo standard error for js client
+    const responseBody = {
+        v: '2',
+        error: errorBody,
+        requestId: generateRequestId(),
+        products: {},
+    };
+    const responseHeaders = {
+        'Access-Control-Allow-Origin': '*',
+    };
+    return new Response(JSON.stringify(responseBody), { status: 500, headers: responseHeaders });
 }
 
 async function fetchCacheable(request, ttl) {
     return fetch(request, { cf: { cacheTtl: ttl } });
 }
 
-const INT_VERSION = '0.0.2'; // todo no hard coding of version
+const INT_VERSION = '__current_worker_version__';
 const HEADER_NAME = 'ii';
 function getHeaderValue(type) {
-    return `fingerprintjs-cloudflare/${INT_VERSION}/${type}`;
+    return `fingerprintjs-pro-cloudflare/${INT_VERSION}/${type}`;
 }
-function addMonitoringHeadersForProCDN(url) {
+function addTrafficMonitoringSearchParamsForProCDN(url) {
     url.searchParams.append(HEADER_NAME, getHeaderValue('procdn'));
 }
-function addMonitoringHeadersForVisitorIdRequest(url) {
+function addTrafficMonitoringSearchParamsForVisitorIdRequest(url) {
     url.searchParams.append(HEADER_NAME, getHeaderValue('ingress'));
 }
 
 function returnHttpResponse(oldResponse) {
-    // todo CSP headers
+    oldResponse.headers.delete('Strict-Transport-Security');
     return oldResponse;
 }
 
@@ -9490,7 +9565,7 @@ async function handleDownloadScript(request) {
     const requestSearchParams = new URL(request.url).searchParams;
     const agentScriptEndpoint = getAgentScriptEndpoint(requestSearchParams);
     const url = new URL(agentScriptEndpoint);
-    addMonitoringHeadersForProCDN(url);
+    addTrafficMonitoringSearchParamsForProCDN(url);
     const newRequest = new Request(url.toString(), new Request(request, { headers: new Headers(request.headers) }));
     console.log(`Downloading script from cdnEndpoint ${url.toString()}...`);
     const workerCacheTtl = 5 * 60;
@@ -9546,14 +9621,14 @@ async function handleIngressAPI(request) {
     const endpoint = getVisitorIdEndpoint(region);
     const newURL = new URL(endpoint);
     copySearchParams(oldURL, newURL);
-    addMonitoringHeadersForVisitorIdRequest(newURL);
+    addTrafficMonitoringSearchParamsForVisitorIdRequest(newURL);
     return handleIngressAPIRaw(request, newURL);
 }
 
 function buildEnvInfo(env) {
     const workerPath = {
         envVarName: workerPathVarName,
-        value: getWorkerPath(env),
+        value: getWorkerPathVar(env),
         isSet: isWorkerPathSet(env),
     };
     const scriptDownloadPath = {
@@ -9561,15 +9636,15 @@ function buildEnvInfo(env) {
         value: getScriptDownloadPath(env),
         isSet: isScriptDownloadPathSet(env),
     };
-    const visitorIdPath = {
-        envVarName: visitorIdPathVarName,
-        value: getVisitorIdPath(env),
-        isSet: isVisitorIdPathSet(env),
+    const getResultPath = {
+        envVarName: getResultPathVarName,
+        value: getGetResultPath(env),
+        isSet: isGetResultPathSet(env),
     };
     return {
         workerPath,
         scriptDownloadPath,
-        visitorIdPath,
+        getResultPath,
     };
 }
 function buildHeaders() {
@@ -9581,6 +9656,7 @@ function buildBody(env) {
     return {
         success: true,
         envInfo: buildEnvInfo(env),
+        version: '__current_worker_version__',
     };
 }
 function handleHealthCheck(env) {
@@ -9593,14 +9669,13 @@ function handleHealthCheck(env) {
     });
 }
 
-//////////////////// 1 comment
 async function handleRequest(request, env) {
     const url = new URL(request.url);
     const pathname = url.pathname;
     if (pathname === getScriptDownloadPath(env)) {
         return handleDownloadScript(request);
     }
-    if (pathname === getVisitorIdPath(env)) {
+    if (pathname === getGetResultPath(env)) {
         return handleIngressAPI(request);
     }
     if (pathname === getHealthCheckPath(env)) {
